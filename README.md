@@ -6,3 +6,8 @@ These are just the files from the course that thaught by @BenTristem, the actual
 Enjoy!!
 #### Muhammad Fitrah Pratama, 2018 from Ben Tristem's Udemy Unreal Engine Course
 
+## Steps' Files :
+
+- BT01. Intro, Notes, and Assets
+- BT02. Game Design Document (GDD)
+- BT03. Setting Up a GitHub Repo
