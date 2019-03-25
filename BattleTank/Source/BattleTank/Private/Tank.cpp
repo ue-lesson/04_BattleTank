@@ -1,6 +1,19 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "../Public/Tank.h"
+#include "BattleTank.h"
+
+// Take Tank Aim Log function at TankAimingComponent
+void ATank::AimAt(FVector OutHitLocation)
+{
+	TankAimingComponent->AimAt(OutHitLocation);
+}
+
+void ATank::SetBarrelReference(UStaticMeshComponent * BarrelToSet)
+{
+	TankAimingComponent->SetBarrelReference(BarrelToSet);
+}
+
 
 // Sets default values
 ATank::ATank()
@@ -8,6 +21,8 @@ ATank::ATank()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	// No need to protect pointer as added at construction
+	TankAimingComponent = CreateDefaultSubobject<UTankAimingComponent>(FName("AimingComponent"));
 }
 
 // Called when the game starts or when spawned
