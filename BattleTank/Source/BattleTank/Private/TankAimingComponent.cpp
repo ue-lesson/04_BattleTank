@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "../Public/TankAimingComponent.h"
-#include "BattleTank.h"
 #include "Classes/Kismet/GameplayStatics.h"
+#include "BattleTank.h"
 
 
 
@@ -22,23 +22,6 @@ void UTankAimingComponent::SetBarrelReference(UStaticMeshComponent * BarrelToSet
 	Barrel = BarrelToSet;
 }
 
-// Called when the game starts
-void UTankAimingComponent::BeginPlay()
-{
-	Super::BeginPlay();
-
-	// ...
-	
-}
-
-
-// Called every frame
-void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
-}
 
 void UTankAimingComponent::AimAt(FVector OutHitLocation, float LaunchSpeed)
 {
@@ -46,25 +29,39 @@ void UTankAimingComponent::AimAt(FVector OutHitLocation, float LaunchSpeed)
 
 	FVector OutLaunchVelocity(0); //// WHY(this is what will we get from this whole function)?
 	FVector StartLocation = Barrel->GetSocketLocation(FName("Projectile"));
-	if (UGameplayStatics::SuggestProjectileVelocity
-		(
-			this,
-			OutLaunchVelocity,
-			StartLocation,
-			OutHitLocation,
-			LaunchSpeed,
-			false,
-			0,
-			0,
-			ESuggestProjVelocityTraceOption::DoNotTrace
-			)
-		)
+	bool bHaveAimSolution = UGameplayStatics::SuggestProjectileVelocity
+	(
+		this,
+		OutLaunchVelocity,
+		StartLocation,
+		OutHitLocation,
+		LaunchSpeed,
+		ESuggestProjVelocityTraceOption::DoNotTrace
+	);
+
+	if (bHaveAimSolution)
 	{
 		auto AimDirection = OutLaunchVelocity.GetSafeNormal();
-		auto TankName = GetOwner()->GetName();
-		UE_LOG(LogTemp, Warning, TEXT("%s aiming at: %s "), *TankName, *AimDirection.ToString());
+		MoveBarrelToward(AimDirection);
 	}
 	//If no solution found, do nothing 
+}
+
+
+void UTankAimingComponent::MoveBarrelToward(FVector AimDirection)
+{
+
+	// Work-out between current barrel rotation and AimDirection
+	auto BarrelRotator = Barrel->GetForwardVector().Rotation();
+	auto AimAsRotator = AimDirection.Rotation();
+	UE_LOG(LogTemp, Warning, TEXT("Barrel rotate from %s to %s"), *BarrelRotator.ToString(), *AimAsRotator.ToString());
+
+	// Move the barrel the right amount this frame
+	// Given a max elevation speed and frame time
+
+
+	//////FVector DeltaAim = StartLocation - OutHitLocation;
+	//////bool bMoveBarrel = USceneComponent::MoveComponent (DeltaAim,Add,true,OutHitLocation,EMoveComponentFlags::MOVECOMP_NoFlags,ETeleportType::None);
 }
 
 

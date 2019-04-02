@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "Engine.h"
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "TankAimingComponent.generated.h"
@@ -18,15 +19,13 @@ public:
 
 	void SetBarrelReference(UStaticMeshComponent* BarrelToSet);
 
-	// Called when the game starts
-	virtual void BeginPlay() override;
-
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	//TODO: add SetTurretReference
 
 	void AimAt(FVector OutHitLocation, float LaunchSpeed);
 
 	
 private:
 	UStaticMeshComponent* Barrel; // Get Barrel from TankAimingComponent parent
+
+	void MoveBarrelToward(FVector AimDirection);
 };
